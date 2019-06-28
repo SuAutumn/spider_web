@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>drag and drop</title>
+    <style type="text/css">
+        .ml-20 {
+            margin-left: 20px;
+        }
+
+        .pa {
+            position: absolute;
+        }
+
+        div.item {
+            width: 100px;
+            margin: 5px 10px;
+            border-top: 2px dashed transparent;
+            transition: border-top-color .3s;
+            font-size: 16px;
+        }
+        /*div.item:after {*/
+        /*    content: '';*/
+        /*    display: block;*/
+        /*    height: 14px;*/
+        /*    background-color: #ff6600;*/
+        /*}*/
+
+        div.br-t-dash {
+            border-top-color: #ccc;
+        }
+        div.drag-start {
+            color: #ccc;
+        }
+        div#app {
+            height: 200px;
+            width: 100px;
+            border: 1px solid #000;
+        }
+        .text-color {
+            color: #009ffa;
+        }
+    </style>
+</head>
+<body>
+<script>
+  function log (...arg) {
+    console.log(...arg)
+  }
+
+  function foo (child) {
+    child.classList.add('drag-start')
+    return child
+  }
+
+  let fromEle = null
+
+  function dragstart (e, dom) {
+    // e.preventDefault()
+    e.stopPropagation()
+    fromEle = foo(dom)
+    log('dragstart', dom)
+  }
+
+  function drag (e, dom) {
+    e.preventDefault()
+    e.stopPropagation()
+    // requestAnimationFrame((timestamp) => {
+    //   fromEle.style.left = e.clientX + 'px'
+    //   fromEle.style.top = e.clientY + 'px'
+    // })
+    // log('drag', fromEle)
+  }
+
+  function dragend (e, dom) {
+    e.preventDefault()
+    e.stopPropagation()
+    log('dragend ', dom)
+  }
+
+  function dragenter (e, dom) {
+    e.preventDefault()
+    e.stopPropagation()
+    dom.classList.add('br-t-dash')
+    dom.classList.add('text-color')
+    log('enter ')
+  }
+
+  function dragover (e, dom) {
+    e.preventDefault()
+    e.stopPropagation()
+    log('over B')
+  }
+
+  function dragleave (e, dom) {
+    e.preventDefault()
+    e.stopPropagation()
+    dom.classList.remove('br-t-dash')
+    dom.classList.remove('text-color')
+    log('leave ')
+  }
+
+  function drop (e, dom) {
+    e.preventDefault()
+    e.stopPropagation()
+    log('drop', dom)
+    dom.classList.remove('br-t-dash')
+    dom.classList.remove('text-color')
+    if (dom === fromEle) return
+    try {
+      dom.appendChild(fromEle)
+    } catch (e) {
+      console.log(e.message)
+    }
+    fromEle.classList.remove('pa')
+    fromEle.classList.remove('drag-start')
+    fromEle = null
+  }
+  class Node {
+    constructor (props) {
+      super(props)
+      this.children = null
+      this.next = null
+      this.father = null
+      this.pre = null
+      this.value = ''
+    }
+  }
+
+</script>
+<div id="app">
+    <div draggable="true" class="item"
+         ondragstart="dragstart(event, this)"
+         ondragleave="dragleave(event, this)"
+         ondragenter="dragenter(event, this)"
+         ondragover="dragover(event, this)"
+         ondrop="drop(event, this)">
+        1-1
+        <div class="ml-20 item" draggable="true"
+             ondragstart="dragstart(event, this)"
+             ondragleave="dragleave(event, this)"
+             ondragenter="dragenter(event, this)"
+             ondragover="dragover(event, this)"
+             ondrop="drop(event, this)">
+            1-2
+        </div>
+    </div>
+    <div draggable="true" class="item"
+         ondragstart="dragstart(event, this)"
+         ondragleave="dragleave(event, this)"
+         ondragenter="dragenter(event, this)"
+         ondragover="dragover(event, this)"
+         ondrop="drop(event, this)">
+        2-1
+        <div class="ml-20 item" draggable="true"
+             ondragstart="dragstart(event, this)"
+             ondragleave="dragleave(event, this)"
+             ondragenter="dragenter(event, this)"
+             ondragover="dragover(event, this)"
+             ondrop="drop(event, this)">
+            2-2
+        </div>
+        <div class="ml-20 item" draggable="true"
+             ondragstart="dragstart(event, this)"
+             ondragleave="dragleave(event, this)"
+             ondragenter="dragenter(event, this)"
+             ondragover="dragover(event, this)"
+             ondrop="drop(event, this)">
+            2-3
+        </div>
+    </div>
+</div>
+</body>
+</html>
